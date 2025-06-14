@@ -4,3 +4,6 @@ scilkit-learn
 matplotlib
 seaborn
 streamlit
+transformers
+Image
+Pillow
