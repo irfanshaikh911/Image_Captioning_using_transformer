@@ -1,16 +1,16 @@
 import streamlit as st
 from PIL import Image
-from model.caption_model import model,image_processor, device  
+from model.caption_model import model,image_processor, device,tokenizer
+from transformers import AutoTokenizer
 
 st.set_page_config(page_title="Image Captioning", layout="centered")
 st.title("🖼️ Image Captioning using Deep Learning")
 
-@st.cache_resource
-def get_model():
-    return model()
+# @st.cache_resource
+# def get_model():
+    # return model()
 
-model = get_model()
-
+# model = get_model()
 uploaded_file = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
@@ -20,10 +20,11 @@ if uploaded_file is not None:
     with st.spinner("Generating caption..."):
         img = image_processor(image, return_tensors="pt").to(device)
         output = model.generate(**img)
+        caption = tokenizer.batch_decode(output, skip_special_tokens=True)[0]
 
 
     st.success("Generated Caption:")
-    st.markdown(f"**📌 {output}**")
+    st.markdown(f"**📌 {caption}**")
     
     
 # def load_model(model, image_processor, tokenizer, image_path):
